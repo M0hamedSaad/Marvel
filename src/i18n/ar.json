@@ -1,3 +1,7 @@
 {
-  "en": "English"
+  "en": "English",
+  "username": "اسم المستخدم",
+  "password": "كلمة المرور",
+  "login": "تسجيل الدخول",
+  "rights": "2021 Cinema App - جميع الحقوق محفوظة ©"
 }
