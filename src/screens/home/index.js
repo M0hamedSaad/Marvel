@@ -15,8 +15,9 @@ import { translate } from '../../i18n'
 import Facebook from "../../assets/images/facebook.svg"
 import Twitter from "../../assets/images/twitter.svg"
 import Instagram from "../../assets/images/instagram.svg"
-import { Header } from '../../components/header';
+import { Header, MyCarousel } from '../../components';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 
@@ -31,9 +32,10 @@ const Home = ({ route }) => {
   return (
 
     <SafeAreaView style={styles.container} >
-      <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={{ flex: 1 }}>
         <Header username={username} searching={searching} />
 
+        <MyCarousel />
 
         <View style={styles.icons}>
           <Facebook style={styles.icon} />
@@ -41,7 +43,7 @@ const Home = ({ route }) => {
           <Instagram style={styles.icon} />
         </View>
         <Text style={styles.txtRights}>{translate('rights')}</Text>
-      </KeyboardAwareScrollView>
+      </ScrollView>
     </SafeAreaView>
   );
 };

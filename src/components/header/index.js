@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   I18nManager,
   TouchableOpacity,
+
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -106,7 +107,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.GRAY,
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: hp(3)
+    marginTop: hp(3),
+    height: Platform.OS == 'ios' ? hp(5.5) : null
+
   },
   input: {
     width: '90%',
