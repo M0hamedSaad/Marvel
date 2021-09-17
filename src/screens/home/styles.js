@@ -11,16 +11,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  clip: {
-    position: 'absolute',
-    right: I18nManager.isRTL ? null : wp(-31),
-    left: I18nManager.isRTL ? wp(-31) : null,
-    transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }]
-  },
-  logo: {
-    marginHorizontal: wp(5),
-    marginBottom: hp(15)
-  },
+
   input: {
     marginHorizontal: wp(5),
     marginBottom: hp(3),
@@ -29,9 +20,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: hp(.3),
     borderBottomColor: COLORS.LIGHT,
     width: wp(60),
-    fontFamily: FONTS.LIGHT,
+    fontFamily: FONTS.MEDIUM,
     color: COLORS.WHITE,
-    fontSize: hp(2.2)
+    fontSize: hp(2.2),
+    textAlign: I18nManager.isRTL ? 'right' : 'left'
   },
   icons: {
     marginTop: 'auto',

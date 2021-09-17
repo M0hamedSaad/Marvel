@@ -31,7 +31,7 @@ const Login = () => {
   const dismiss = () => { Keyboard.dismiss() }
   const login = () => {
     Keyboard.dismiss();
-    //navigation.dispatch(StackActions.replace('home', { username }))
+    navigation.dispatch(StackActions.replace('Home', { username }))
   }
   return (
 

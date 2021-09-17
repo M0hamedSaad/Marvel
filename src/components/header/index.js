@@ -1,14 +1,12 @@
-import React , {useContext} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   View,
   Text,
-  Image,
+  TextInput,
   SafeAreaView,
   I18nManager,
   TouchableOpacity,
-  Platform,
-  BackHandler
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -19,43 +17,51 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import { FONTS, COLORS } from '../../utils';
 import { useNavigation } from '@react-navigation/native'
 
-const menu = require('../../assets/images/menu.png');
-const notifyIcon = require('../../assets/images/notification.png');
 
+import Logo from "../../assets/images/logo.svg"
+import Search from "../../assets/images/search.svg"
 
-export const Header = () => {
+import { Avatar } from 'react-native-elements';
+import { translate } from '../../i18n';
+const user = require("../../assets/images/user.png")
+
+export const Header = ({ username, searching }) => {
   const navigation = useNavigation()
+  const [search, onChangeSearch] = useState('')
+
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={{ flexDirection: 'row', paddingHorizontal: 10 }}>
-        <TouchableOpacity style={styles.borderMenu} onPress={() => navigation.openDrawer()}>
-          <Image style={styles.img} source={menu} />
+    <SafeAreaView>
+      <View style={styles.container}>
+        <Logo />
+        <TouchableOpacity style={styles.simpleRow}>
+          <Avatar
+            size={'medium'}
+            source={user}
+          />
+          <Text style={styles.username} numberOfLines={2}>{username}</Text>
+          <Icon name='down' style={styles.icon} />
         </TouchableOpacity>
-
-        {notify &&
-          <TouchableOpacity onPress={() => navigation.navigate('Notify')}>
-            <Image style={styles.notify} source={notifyIcon} />
-          </TouchableOpacity>
-        }
       </View>
 
-      <Text style={styles.txt}>{title}</Text>
-      {arrow && (
-        <Icon
-          name={I18nManager.isRTL ? "left" : 'right'}
-          style={styles.arrow}
-          onPress={() => {
-            let canGoBack = navigation.canGoBack();
-           if( canGoBack ) 
-           {
-            navigation.goBack()
-            isShow(false)
-           } else BackHandler.exitApp();
-          }}
-        />
-      )}
-      <View style={styles.hideWidth} />
+      <View style={styles.inputContainer}>
+        <TextInput
+          returnKeyType='search'
+          onSubmitEditing={searching}
+          onChangeText={onChangeSearch}
+          selectionColor={COLORS.LIGHT}
+          style={[styles.input]}
+          placeholderTextColor={COLORS.LIGHT}
+          placeholder={translate('search')} >
+          <Text style={styles.heighLight}>{search}</Text>
+        </TextInput>
+
+        <TouchableOpacity onPress={searching}>
+          <Search />
+        </TouchableOpacity>
+
+      </View>
+      <View style={styles.line} />
     </SafeAreaView>
   );
 };
@@ -64,47 +70,53 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: wp('100%'),
-    paddingVertical: '5%',
-    paddingHorizontal: '6%',
+    width: wp(100),
+    paddingHorizontal: wp(5),
     flexDirection: 'row',
-  },
-  borderMenu: {
-    borderWidth: 1,
-    borderColor: COLORS.primary,
-    padding: 5,
-    borderRadius: 5,
-  },
-  img: {
-    height: 15,
-    width: 15,
-  },
-  pen: {
-    height: 30,
-    width: 30,
-    marginLeft: 10
-  },
 
-  txt: {
+  },
+  line: {
+    width: wp(95),
+    marginLeft: wp(2.5),
+    borderBottomWidth: hp(.2),
+    borderBottomColor: COLORS.GRAY,
+    marginVertical: hp(2)
+  },
+  simpleRow: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  icon: {
+    fontSize: hp(2),
+    color: COLORS.LIGHT
+  },
+  username: {
     fontFamily: FONTS.REGULAR,
-    color: COLORS.darkGray,
-    textAlign: 'center',
-    fontSize: hp('2.5'),
+    color: COLORS.WHITE,
+    fontSize: hp('2'),
+    paddingHorizontal: wp(2),
+    maxWidth: wp(25),
+    textAlign: 'center'
   },
-  notify:
-  {
-    width: 25, height: 25, color: COLORS.primary, marginLeft: 10
+  inputContainer: {
+    width: wp(90),
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    borderRadius: wp(7),
+    backgroundColor: COLORS.GRAY,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: hp(3)
   },
-  hideWidth: {
-    width: hp('3'),
+  input: {
+    width: '90%',
+    paddingHorizontal: wp(2.5),
+    fontFamily: FONTS.LIGHT,
+    color: COLORS.WHITE,
+    fontSize: hp(2),
+    textAlign: I18nManager.isRTL ? 'right' : 'left'
   },
-
-  arrow: {
-    fontSize: 22,
-    right: 1,
-    bottom: Platform.OS == "ios" ? 1 : 20,
-    marginRight: 10,
-    position: 'absolute',
-    color: COLORS.primary,
-  },
+  heighLight: {
+    backgroundColor: COLORS.LIGHT,
+  }
 });
