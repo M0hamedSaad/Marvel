@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Platform,
   I18nManager,
+  ActivityIndicator,
 } from 'react-native';
 
 import {
@@ -23,49 +24,38 @@ import StarFill from '../../assets/images/star-filled.svg'
 import StarEmpty from '../../assets/images/empty-star.svg'
 import Heart from '../../assets/images/heart.svg'
 import { useGet } from '../../services/useGet';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCharacters } from '../../redux/actions';
+import { useNavigation } from '@react-navigation/core';
 const limit = 5;
 
-const ENTRIES1 = [
-  {
-    title: 'Beautiful and dramatic Antelope Canyon',
-    subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
-    illustration: 'https://i.imgur.com/UYiroysl.jpg',
-  },
-  {
-    title: 'Earlier this morning, NYC',
-    subtitle: 'Lorem ipsum dolor sit amet',
-    illustration: 'https://i.imgur.com/UPrs1EWl.jpg',
-  },
-  {
-    title: 'White Pocket Sunset',
-    subtitle: 'Lorem ipsum dolor sit amet et nuncat ',
-    illustration: 'https://i.imgur.com/MABUbpDl.jpg',
-  },
-  {
-    title: 'Acrocorinth, Greece',
-    subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
-    illustration: 'https://i.imgur.com/KZsmUi2l.jpg',
-  },
-  {
-    title: 'The lone tree, majestic landscape of New Zealand',
-    subtitle: 'Lorem ipsum dolor sit amet',
-    illustration: 'https://i.imgur.com/2nCt3Sbl.jpg',
-  },
-];
 const { width: screenWidth } = Dimensions.get('window');
 
 export const MyCarousel = props => {
-  const [entries, setEntries] = useState([]);
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
 
+  const characters = useSelector(state => state.charactersState?.characters);
   const numOfStars = [0, 1, 2, 3, 4]
   const [stars, setStars] = useState(3);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [offset, setOffset] = useState(0);
+  const [loading, setLoading] = useState(true)
 
 
   useEffect(() => {
-    useGet('/characters', undefined, { limit, offset })
+    get_Characters()
   }, [offset])
+
+  const get_Characters = async () => {
+    setLoading(true)
+    await dispatch(await getCharacters(
+      await useGet('/characters', undefined, { limit, offset })
+    ))
+    console.log({ characters });
+
+    setLoading(false)
+  }
 
   const pagination = () => {
     setOffset(offset + 1)
@@ -82,21 +72,24 @@ export const MyCarousel = props => {
     setStars(indexOfStar)
     setSelectedIndex(indexOfCard)
   }
-
-  useEffect(() => {
-    setEntries(ENTRIES1);
-  }, []);
+  const goToDetails = (item) => {
+    navigation.navigate('Details', { item })
+  }
 
   const renderItem = ({ item, index }, parallaxProps) => {
     return (
-      <View style={styles.item}>
+      <TouchableOpacity
+        onPress={() => goToDetails(item)}
+        style={styles.item} key={index}>
+
         <ParallaxImage
-          source={{ uri: item.illustration }}
+          source={{ uri: item?.thumbnail?.path + '.' + item?.thumbnail?.extension }}
           containerStyle={styles.imageContainer}
           style={styles.image}
           parallaxFactor={0.4}
           {...parallaxProps}
         />
+
         <TouchableOpacity style={styles.fav} >
           <Heart />
         </TouchableOpacity>
@@ -105,7 +98,7 @@ export const MyCarousel = props => {
           <View style={{ flexDirection: 'row', marginBottom: 10 }}>
             {numOfStars.map((star, indexStar) => {
               return (
-                <TouchableOpacity onPress={() => { rate(index, indexStar) }}>
+                <TouchableOpacity key={indexStar} onPress={() => { rate(index, indexStar) }}>
                   {indexStar <= stars && index == selectedIndex ?
                     <StarFill style={{ marginRight: 5 }} /> :
                     <StarEmpty style={{ marginRight: 5 }} />}
@@ -114,50 +107,57 @@ export const MyCarousel = props => {
             })}
           </View>
 
-          <Text style={styles.title} numberOfLines={2}>
-            {'item?.name' + '\n'}
-          </Text>
+          <View style={{ width: '100%', backgroundColor: COLORS.LIGHT + 95, borderRadius: 10, padding: 5 }}>
+            <Text style={styles.title} numberOfLines={2}>
+              {item?.name}
+            </Text>
 
-          <Text style={styles.desc} numberOfLines={4} >
-            {'item?.description'}
-          </Text>
+            {item?.description != '' &&
+              <Text style={styles.desc} numberOfLines={4} >
+                {'\n' + item?.description}
+              </Text>}
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.rowController}>
-        {/**Title */}
-        <Text style={{
-          color: COLORS.WHITE,
-          fontFamily: FONTS.REGULAR,
-          fontSize: hp(2)
-        }}>{translate('characters')}</Text>
-        {/**arrows */}
-        <View style={styles.simpleRow}>
-          <TouchableOpacity onPress={goPrev}>
-            <Left />
-          </TouchableOpacity>
-          <Text style={styles.space} />
-          <TouchableOpacity onPress={goForward}>
-            <Right />
-          </TouchableOpacity>
+    loading && offset == 0 ? <ActivityIndicator color={COLORS.SECONDARY} /> :
+      <View style={styles.container}>
+        <View style={styles.rowController}>
+          {/**Title */}
+          <Text style={{
+            color: COLORS.WHITE,
+            fontFamily: FONTS.REGULAR,
+            fontSize: hp(2)
+          }}>{translate('characters')}</Text>
+          {/**arrows */}
+          <View style={styles.simpleRow}>
+            <TouchableOpacity onPress={goPrev}>
+              <Left />
+            </TouchableOpacity>
+
+            {loading && offset > 0 ? <ActivityIndicator color={COLORS.SECONDARY} style={{ marginHorizontal: 2 }} /> : <Text style={styles.space} />}
+
+            <TouchableOpacity onPress={goForward}>
+              <Right />
+            </TouchableOpacity>
+          </View>
         </View>
+
+        <Carousel
+          extraData={characters}
+          keyExtractor={(item, index) => 'key' + index}
+          ref={carouselRef}
+          sliderWidth={screenWidth}
+          itemWidth={screenWidth - 60}
+          data={characters}
+          renderItem={renderItem}
+          hasParallaxImages={true}
+          onEndReached={pagination}
+        />
       </View>
-
-
-      <Carousel
-        ref={carouselRef}
-        sliderWidth={screenWidth}
-        itemWidth={screenWidth - 60}
-        data={entries}
-        renderItem={renderItem}
-        hasParallaxImages={true}
-        onEndReached={pagination}
-      />
-    </View>
   );
 };
 
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     marginBottom: hp(3)
   },
   space: {
-    paddingHorizontal: 10
+    paddingHorizontal: 12
   },
   title: {
     fontSize: hp(2),
