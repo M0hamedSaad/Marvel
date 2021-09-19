@@ -1,11 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
-  TextInput,
-  TouchableOpacity,
   SafeAreaView,
-  Keyboard
 } from 'react-native';
 import styles from './styles';
 import { useNavigation } from '@react-navigation/native';
@@ -16,7 +13,6 @@ import Facebook from "../../assets/images/facebook.svg"
 import Twitter from "../../assets/images/twitter.svg"
 import Instagram from "../../assets/images/instagram.svg"
 import { Header, MyCarousel } from '../../components';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { ScrollView } from 'react-native-gesture-handler';
 
 
@@ -25,15 +21,15 @@ const Home = ({ route }) => {
   const navigation = useNavigation();
   const username = route?.params?.username
 
-  const searching = () => {
-    alert('call search api...')
-    //navigation.dispatch(StackActions.replace('Ho', { username }))
+  const searching = (searchInput, flag) => {
+    navigation.navigate('Search', { searchInput, username })
   }
-  return (
 
+
+  return (
     <SafeAreaView style={styles.container} >
       <ScrollView contentContainerStyle={{ flex: 1 }}>
-        <Header username={username} searching={searching} />
+        <Header username={username} searching={searching} clear={true} defaultValue={''} />
 
         <MyCarousel />
 

@@ -5,9 +5,9 @@ import { check_lang } from '../utils/helperfunc'
 import Login from '../screens/login';
 import Home from '../screens/home';
 import Details from '../screens/details';
+import Search from '../screens/search';
 
 import { I18nManager } from 'react-native';
-
 
 const Stack = createNativeStackNavigator();
 export default Navigator = () => {
@@ -22,6 +22,7 @@ export default Navigator = () => {
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Details" component={Details} />
+      <Stack.Screen name="Search" component={Search} />
 
     </Stack.Navigator>
   );

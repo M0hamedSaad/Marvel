@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   StyleSheet,
   View,
@@ -7,29 +7,25 @@ import {
   SafeAreaView,
   I18nManager,
   TouchableOpacity,
-
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/AntDesign';
-
 import { FONTS, COLORS } from '../../utils';
 import { useNavigation } from '@react-navigation/native'
 
-
 import Logo from "../../assets/images/logo.svg"
 import Search from "../../assets/images/search.svg"
-
 import { Avatar } from 'react-native-elements';
 import { translate } from '../../i18n';
 const user = require("../../assets/images/user.png")
 
-export const Header = ({ username, searching }) => {
+export const Header = ({ username, searching, clear, defaultValue }) => {
   const navigation = useNavigation()
-  const [search, onChangeSearch] = useState('')
-
+  const [searchInput, onChangeSearch] = useState(defaultValue)
+  const ref = useRef()
 
   return (
     <SafeAreaView>
@@ -47,17 +43,30 @@ export const Header = ({ username, searching }) => {
 
       <View style={styles.inputContainer}>
         <TextInput
+          ref={ref}
           returnKeyType='search'
-          onSubmitEditing={searching}
+          onSubmitEditing={() => {
+            searching(searchInput, true);
+            if (clear) {
+              ref.current.clear();
+              onChangeSearch('')
+            }
+          }}
           onChangeText={onChangeSearch}
           selectionColor={COLORS.LIGHT}
           style={[styles.input]}
           placeholderTextColor={COLORS.LIGHT}
           placeholder={translate('search')} >
-          <Text style={styles.heighLight}>{search}</Text>
+          <Text style={styles.heighLight}>{searchInput}</Text>
         </TextInput>
 
-        <TouchableOpacity onPress={searching}>
+        <TouchableOpacity onPress={() => {
+          searching(searchInput, true);
+          if (clear) {
+            ref.current.clear();
+            onChangeSearch('')
+          }
+        }}>
           <Search />
         </TouchableOpacity>
 

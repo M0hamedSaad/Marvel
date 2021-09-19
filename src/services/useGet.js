@@ -18,12 +18,15 @@ export const useGet = async (path, id, params) => {
     params.hash = hash;
     params.apikey = apikey;
     params.ts = ts;
-    // console.log({ url, params });
+    console.log({ url, params });
     try {
         let res = await axios.get(url, { params });
-        console.log(res);
+        // console.log(res);
         result = [...result, ...res.data.data.results];
-        return result;
+        let total = res.data.data.total
+        //console.log({ result });
+        console.log({ result, total });
+        return { result, total };
 
     } catch (error) {
         console.log('ERROR', error?.response ?
