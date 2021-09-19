@@ -27,7 +27,7 @@ import { useGet } from '../../services/useGet';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCharacters } from '../../redux/actions';
 import { useNavigation } from '@react-navigation/core';
-const limit = 5;
+const limit = 6;
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -42,40 +42,39 @@ export const MyCarousel = props => {
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true)
 
-
+  //call get characters
   useEffect(() => {
     get_Characters()
   }, [offset])
 
+  //call dispatch action characters
   const get_Characters = async () => {
     setLoading(true)
-    await dispatch(await getCharacters(
-      await useGet('/characters', undefined, { limit, offset })
-    ))
-    console.log({ characters });
-
+    const { result } = await useGet('/characters', undefined, { limit, offset })
+    await dispatch(await getCharacters(result))
     setLoading(false)
   }
-
+  //increment page
   const pagination = () => {
     setOffset(offset + 1)
   }
 
   const carouselRef = useRef(null);
+  const goForward = () => { carouselRef.current.snapToNext() };//go forward
+  const goPrev = () => { carouselRef.current.snapToPrev() };//go next
 
-  const goForward = () => { carouselRef.current.snapToNext() };
-
-  const goPrev = () => { carouselRef.current.snapToPrev() };
-
+  // Stars action
   const rate = (indexOfCard, indexOfStar) => {
     // console.log({ indexOfCard, indexOfStar });
     setStars(indexOfStar)
     setSelectedIndex(indexOfCard)
   }
+
   const goToDetails = (item) => {
     navigation.navigate('Details', { item })
   }
 
+  //ParallaxImage Card
   const renderItem = ({ item, index }, parallaxProps) => {
     return (
       <TouchableOpacity
@@ -107,15 +106,9 @@ export const MyCarousel = props => {
             })}
           </View>
 
-          <View style={{ width: '100%', backgroundColor: COLORS.LIGHT + 95, borderRadius: 10, padding: 5 }}>
-            <Text style={styles.title} numberOfLines={2}>
-              {item?.name}
-            </Text>
-
-            {item?.description != '' &&
-              <Text style={styles.desc} numberOfLines={4} >
-                {'\n' + item?.description}
-              </Text>}
+          <View style={styles.descContainer}>
+            <Text style={styles.title} numberOfLines={2}>{item?.name}</Text>
+            {item?.description != '' && <Text style={styles.desc} numberOfLines={4}>{'\n' + item?.description} </Text>}
           </View>
         </View>
       </TouchableOpacity>
@@ -127,18 +120,16 @@ export const MyCarousel = props => {
       <View style={styles.container}>
         <View style={styles.rowController}>
           {/**Title */}
-          <Text style={{
-            color: COLORS.WHITE,
-            fontFamily: FONTS.REGULAR,
-            fontSize: hp(2)
-          }}>{translate('characters')}</Text>
+          <Text style={styles.charTitle}>{translate('characters')}</Text>
           {/**arrows */}
           <View style={styles.simpleRow}>
             <TouchableOpacity onPress={goPrev}>
               <Left />
             </TouchableOpacity>
 
-            {loading && offset > 0 ? <ActivityIndicator color={COLORS.SECONDARY} style={{ marginHorizontal: 2 }} /> : <Text style={styles.space} />}
+            {loading && offset > 0 ?
+              <ActivityIndicator color={COLORS.SECONDARY} style={{ marginHorizontal: 2 }} /> :
+              <Text style={styles.space} />}
 
             <TouchableOpacity onPress={goForward}>
               <Right />
@@ -218,5 +209,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: wp(3),
     top: hp(2)
-  }
+  },
+  descContainer: {
+    width: '100%',
+    backgroundColor: COLORS.LIGHT + 95,
+    borderRadius: 10,
+    padding: 5
+  },
+  charTitle: {
+    color: COLORS.WHITE,
+    fontFamily: FONTS.REGULAR,
+    fontSize: hp(2)
+  },
 });

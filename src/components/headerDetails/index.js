@@ -13,8 +13,6 @@ import {
 import FastImage from 'react-native-fast-image';
 import { FONTS, COLORS } from '../../utils';
 
-
-import Left from "../../assets/images/arrow-right.svg"
 import { useNavigation } from '@react-navigation/core';
 import { Icon } from 'react-native-elements';
 
@@ -24,25 +22,17 @@ export const HeaderDetails = ({ item }) => {
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <FastImage
-          source={{ uri: item?.thumbnail?.path + '.' + item?.thumbnail?.extension }}
-          style={{ width: '100%', height: '100%' }}
-          resizeMode={'cover'}
-        />
+        <FastImage source={{ uri: item?.thumbnail?.path + '.' + item?.thumbnail?.extension }}
+          style={{ width: '100%', height: '100%' }} resizeMode={'cover'} />
+
         <TouchableOpacity style={styles.back} onPress={() => { navigation.goBack() }} >
           <Icon name='arrow-back' type='Ionicons' color='#fff' />
         </TouchableOpacity>
 
         <View style={styles.textContainer}>
-          <Text style={styles.title} numberOfLines={2}>
-            {item?.name}
-          </Text>
-          {item?.description != '' &&
-            <Text style={styles.desc} numberOfLines={4} >
-              {'\n' + item?.description}
-            </Text>}
+          <Text style={styles.title} numberOfLines={2}> {item?.name} </Text>
+          {item?.description != '' && <Text style={styles.desc} numberOfLines={4}>{'\n' + item?.description}</Text>}
         </View>
-
 
       </View>
     </SafeAreaView>
