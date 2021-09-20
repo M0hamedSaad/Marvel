@@ -2,8 +2,9 @@
   "en": "العربية",
   "username": "Username",
   "password": "Password",
-  "login": "Login",
+  "login": "LOGIN",
   "rights": "© 2021 Marvel App - All Right Reserved",
   "search": "Find your favorite character...",
-  "characters": "MARVEL CHARACTERS"
+  "characters": "MARVEL CHARACTERS",
+  "nameRequire": "Username is required."
 }

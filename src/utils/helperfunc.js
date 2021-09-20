@@ -17,17 +17,17 @@ export const check_lang = async () => {
   const lang = state.langState.locale
   console.log({ lang });
 
-  if (lang == 'ar') {
-    I18nManager.forceRTL(true);
-    if (!I18nManager.isRTL) {
-      setTimeout(() => { RNRestart.Restart(); }, 300);
-    }
-  }
-  else {
-    I18nManager.forceRTL(false);
-    if (I18nManager.isRTL) {
-      setTimeout(() => { RNRestart.Restart(); }, 300);
-    }
-  }
+  // if (lang == 'ar') {
+  //   I18nManager.forceRTL(true);
+  //   if (!I18nManager.isRTL) {
+  //     setTimeout(() => { RNRestart.Restart(); }, 300);
+  //   }
+  // }
+  // else {
+  //   I18nManager.forceRTL(false);
+  //   if (I18nManager.isRTL) {
+  //     setTimeout(() => { RNRestart.Restart(); }, 300);
+  //   }
+  // }
 
 };

@@ -12,12 +12,12 @@ import { Header } from '../../components';
 import { useGet } from '../../services/useGet';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/core';
-import * as Animatable from "react-native-animatable";
 import { getSearch } from '../../redux/actions';
 import { COLORS } from '../../utils';
 import FastImage from 'react-native-fast-image';
 import Sad from '../../assets/images/sad.svg'
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import * as Animatable from "react-native-animatable";
 const { createAnimatableComponent } = Animatable;
 const AnimatableView = createAnimatableComponent(View);
 const limit = 10
