@@ -34,13 +34,14 @@ const Details = ({ route }) => {
         )
     }, [tab.tabName == 'urls']);
 
-    useEffect(() => {
-        if (url) setModalVisable(true)
-    }, [url])
+
 
     const pressItem = (item) => {
         if (tab.tabName == 'urls') Linking.openURL(item.url)
-        else setUrl(item.resourceURI);
+        else {
+            setUrl(item.resourceURI);
+            setModalVisable(true);
+        }
 
     }
     const closeModal = () => {
