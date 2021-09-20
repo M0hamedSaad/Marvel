@@ -5,6 +5,7 @@ import {
     Text,
     SafeAreaView,
     TouchableOpacity,
+
 } from 'react-native';
 import {
     widthPercentageToDP as wp,
@@ -14,7 +15,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { COLORS } from '../../utils';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { useGet } from '../../services/useGet';
-
+import Logo from '../../assets/images/logo.svg'
 export const ImageViewerModal = ({ url, closeModal }) => {
 
 
@@ -39,7 +40,10 @@ export const ImageViewerModal = ({ url, closeModal }) => {
         result[0]?.images?.map(item => {
             images = [...images, { url: item.path + '.' + item.extension }]
         })
-        if (images.length == 0) { images = [{ url: result[0]?.thumbnail?.path + '.' + result[0]?.thumbnail?.extension }] }
+        if (images.length == 0) {
+            images = result[0]?.thumbnail ?
+                [{ url: result[0]?.thumbnail?.path + '.' + result[0]?.thumbnail?.extension }] : []
+        }
         setImages(images)
         setLoading(false)
     }
@@ -62,17 +66,23 @@ export const ImageViewerModal = ({ url, closeModal }) => {
                 <View style={styles.header}>
                     <Text style={styles.txt} >{data[0]?.title}{data[0]?.description ? '\n\n' + data[0]?.description : ''}</Text>
                 </View>
-
-                <ImageViewer
-                    style={styles.imagViewrContainer}
-                    saveToLocalByLongPress={false}
-                    useNativeDriver={true}
-                    imageUrls={images}
-                    enableSwipeDown
-                    onSwipeDown={closeModal}
-                    enablePreload
-                    renderIndicator={renderIndicator}
-                />
+                {images.length == 0 ?
+                    <Logo
+                        width={wp(50)}
+                        height={hp(50)}
+                    />
+                    :
+                    <ImageViewer
+                        style={styles.imagViewrContainer}
+                        saveToLocalByLongPress={false}
+                        useNativeDriver={true}
+                        imageUrls={images}
+                        enableSwipeDown
+                        onSwipeDown={closeModal}
+                        enablePreload
+                        renderIndicator={renderIndicator}
+                    />
+                }
             </>}
         </SafeAreaView>
     );
