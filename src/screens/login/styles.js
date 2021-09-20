@@ -13,8 +13,8 @@ const styles = StyleSheet.create({
 
   clip: {
     position: 'absolute',
-    right: I18nManager.isRTL ? null : wp(-31),
-    left: I18nManager.isRTL ? wp(-31) : null,
+    right: wp(-31),
+   // left: I18nManager.isRTL ? wp(31) : null,
     transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }]
   },
   logo: {
@@ -31,7 +31,8 @@ const styles = StyleSheet.create({
     width: wp(60),
     fontFamily: FONTS.LIGHT,
     color: COLORS.WHITE,
-    fontSize: hp(2.2)
+    fontSize: hp(2.2),
+    textAlign:I18nManager.isRTL?'right':'left'
   },
   icons: {
     marginTop: 'auto',
@@ -55,13 +56,13 @@ const styles = StyleSheet.create({
     borderWidth: hp(.3),
     borderColor: COLORS.SECONDARY,
     paddingVertical: hp(1),
-    width: wp('30')
+    width: wp('35')
   },
   btnTxt: {
     color: COLORS.WHITE,
     textAlign: 'center',
-    fontFamily: FONTS.SEMI_BOLD,
-    fontSize: hp(2),
+    fontFamily: FONTS.LIGHT,
+    fontSize: hp(2.4),
   },
 });
 

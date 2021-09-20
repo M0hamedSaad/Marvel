@@ -7,10 +7,12 @@ const baseUrl = 'https://gateway.marvel.com/v1/public';
 
 let result = [];
 
-export const useGet = async (path, id, params) => {
+export const useGet = async (path, id, params, endPoint) => {
     let url = '';
     if (id) url = baseUrl + path + '/' + id
+    else if (endPoint) url = endPoint
     else url = baseUrl + path
+
 
     if (params == undefined) params = {}
     if (params?.offset == undefined || params?.offset == 0) result = []

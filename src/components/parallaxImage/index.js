@@ -138,8 +138,8 @@ export const MyCarousel = props => {
         </View>
 
         <Carousel
-          extraData={characters}
-          keyExtractor={(item, index) => 'key' + index}
+         // extraData={characters}
+          keyExtractor={(item, index) => 'key' + index.toString()}
           ref={carouselRef}
           sliderWidth={screenWidth}
           itemWidth={screenWidth - 60}
