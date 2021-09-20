@@ -1,4 +1,4 @@
-// if (!__DEV__) {console.log = () => null};
+if (!__DEV__) { console.log = () => null };
 
 /**
  * @format
